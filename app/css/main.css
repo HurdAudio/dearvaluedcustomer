@@ -1,0 +1,201 @@
+body {
+  background: #22bc44;
+  background-color: -webkit-linear-gradient(-135deg, #ffffff, #222);
+  background: -o-linear-gradient(-135deg, #ffffff, #222);
+  background: -moz-linear-gradient(-135deg, #ffffff, #222);
+  background: linear-gradient(-135deg, #ffffff, #222);
+
+  opacity: 0.9;
+
+  font-weight: 900;
+
+
+}
+
+
+
+header {
+  font-family: 'Libre Barcode 128 Text', cursive;
+  position: fixed;
+  top: -1em;
+  width: 100%;
+  height: 3.5em;
+  font-size: 40px;
+  margin-bottom: 2em;
+  margin-top: 0;
+  padding-left: 0.4em;
+  /*border-bottom: 3px solid #ff0000;*/
+  letter-spacing: 0.1em;
+  z-index: 4;
+  background: #ffffff;
+  background-color: -webkit-linear-gradient(135deg, #ff0, #000000);
+  background: -o-linear-gradient(135deg, #ff0, #000000);
+  background: -moz-linear-gradient(135deg, #ff0, #000000);
+  background: linear-gradient(135deg, #ff0, #000000);
+}
+
+#resultsSummary {
+  font-family: 'Cabin', sans-serif;
+  font-size: 18px;
+  width: 30%;
+  height: auto;
+}
+
+#answers {
+  font-family: 'Cabin', sans-serif;
+  font-size: 18px;
+  width: 33%;
+  margin-left: 2%;
+}
+
+.answerField {
+  align-content: center;
+  position: static;
+}
+
+.answerField input[type=radio] {
+  float: left;
+}
+
+.answerField p {
+  margin-left: 2.2em;
+}
+
+#title {
+  font-size: 56px;
+  align-self: center;
+  border-bottom: 3px solid #ff0000;
+}
+
+#surveyBox {
+  align-items: center;
+  align-self: auto;
+  align-content: center;
+  float:none;
+  padding-top: 160px;
+}
+
+#surveyInvite {
+  font-family: 'Cabin', sans-serif;
+  width: 33%;
+}
+
+#surveyInvite {
+  align-items: center;
+  width: 33%;
+}
+
+#surveyInvite h3 {
+  margin-left: 2.3em;
+  font-size: 30px;
+}
+
+#surveyInvite h2 {
+  margin-left: 2.3em;
+}
+
+#survey {
+  position: relative;
+  height: 55%;
+  overflow: scroll;
+  margin-left: 5%;
+  z-index: 0;
+  opacity: 1.0;
+
+}
+
+footer {
+  position: fixed;
+    bottom: 0%;
+    width: 100%;
+    height: 6em;
+    /*border-top: 3px solid #ff0000;*/
+    background: #ffffff;
+    background-color: -webkit-linear-gradient(135deg, #ff0, #000000);
+    background: -o-linear-gradient(135deg, #ff0, #000000);
+    background: -moz-linear-gradient(135deg, #ff0, #000000);
+    background: linear-gradient(135deg, #ff0, #000000);
+    z-index: 4;
+}
+
+footer img {
+  float: right;
+  margin-right: 26em;
+  margin-top: -4.9em;
+}
+
+footer h3 {
+  margin-left: 1.1em;
+  margin-top: 3.5em;
+  font-family: 'Raleway', sans-serif;
+}
+
+footer h2 {
+  margin-top: 2.6em;
+  font-family: 'Raleway', sans-serif;
+}
+
+#answers input[type=radio] {
+  margin-top: 0.3em;
+}
+
+#answers p {
+  font-size: 24px;
+  margin-left: 1.1em;
+}
+
+
+.button {
+  background: #22bc44;
+  background-color: -webkit-linear-gradient(135deg, #00ffff, #ffffff);
+  background: -o-linear-gradient(135deg, #00ffff, #ffffff);
+  background: -moz-linear-gradient(135deg, #00ffff, #ffffff);
+  background: linear-gradient(135deg, #00ffff, #ffffff);
+  border-radius: 100%;
+  height: 110px;
+  width: 110px;
+  margin-top: 1em;
+  margin-left: 40%;
+  margin-top: 33%;
+  font-size: 24px;
+  font-family: 'Oswald', sans-serif;
+  text-shadow: -2px 2px 1px #666666, -4px 4px 1px #888888, -6px 6px 1px #aaaaaa, -8px 8px 1px #cccccc;
+  padding-left: 0.3em;
+  padding-bottom: 0.2em;
+
+}
+
+.answerblock {
+  background: #ff00ff;
+  background-color: -webkit-linear-gradient(135deg, #ff00ff, #ffffff);
+  background: -o-linear-gradient(135deg, #ff00ff, #ffffff);
+  background: -moz-linear-gradient(135deg, #ff00ff, #ffffff);
+  background: linear-gradient(135deg, #ff00ff, #ffffff);
+  height: 25px;
+  margin-bottom: 2em;
+}
+
+#answers button {
+  margin-left: 5.9em;
+  margin-top: 2.8em;
+  margin-right: 5.9em;
+}
+
+#answerblock1 {
+  width: 11%;
+}
+
+#answerblock2 {
+  width: 9%;
+}
+
+#answerblock3 {
+  width: 20%;
+}
+
+#answerblock4 {
+  width: 10%;
+}
+#answerblock5 {
+  width: 50%;
+}
