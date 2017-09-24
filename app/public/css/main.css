@@ -78,11 +78,7 @@ header {
 #surveyInvite {
   font-family: 'Cabin', sans-serif;
   width: 33%;
-}
-
-#surveyInvite {
   align-items: center;
-  width: 33%;
 }
 
 #surveyInvite h3 {
