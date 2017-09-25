@@ -2,11 +2,11 @@
   "name": "dearvaluedcustomer",
   "version": "1.0.0",
   "description": "test app",
-  "main": "/app/server.js",
+  "main": "./app/server.js",
   "scripts": {
     "knex": "knex",
     "heroku-postbuild": "knex migrate:latest",
-    "start": "nodemon server.js"
+    "start": "nodemon ./app/server.js"
   },
   "repository": {
     "type": "git",
