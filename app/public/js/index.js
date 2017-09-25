@@ -9,13 +9,16 @@ const answers = document.getElementById('answers');
 const resultsSummary = document.getElementById('resultsSummary');
 var answered = false;
 
-function nextAnswer(arr, num) {
-  return(
-    arr.filter((ans)=>{
-    return(ans.order === (num + 1));
-  }));
-
-}
+function getCookie (name) {
+    var cookies = document.cookie.split(';');
+    for(var i=0 ; i < cookies.length ; ++i) {
+        var pair = cookies[i].trim().split('=');
+        if(pair[0] === name) {
+            return (pair[1]);
+          }
+    }
+    return null;
+  }
 
 
 
@@ -41,7 +44,7 @@ function resizeBar(divBar, currentSize, targetSize) {
   }
   setTimeout(()=>{
     resizeBar(divBar, currentSize + 1, targetSize);
-  }, 50);
+  }, 45);
 }
 
 function sidePanelResults(answers, surveyAnswers, selections) {
@@ -79,6 +82,8 @@ function sidePanelResults(answers, surveyAnswers, selections) {
       resizeBar(element, 1, sizer);
     }
   }
+  document.cookie = 'youansweredthequestion' + "=" + 'already';
+  endSurvey();
 }
 
 function displayResultsPanel(qq) {
@@ -195,6 +200,19 @@ function displayAnswers(qq) {
   });
 }
 
+function questionInTheMiddle(qqq) {
+  axios.get(`/survey_questions/${qqq}`)
+  .then(qData=>{
+    let q = qData.data;
+    let questionMid = React.createElement(
+      'h3',
+      {id: 'completion'},
+      q.question_text
+    );
+    ReactDOM.render(questionMid, answers);
+  });
+}
+
 function startSurvey(qq) {
   axios.get(`/survey_questions/${qq}`)
   .then(questionData=>{
@@ -210,21 +228,30 @@ function startSurvey(qq) {
   });
 }
 
+function endSurvey() {
+  let thanYou = React.createElement('h3', {id: 'thankUser'}, 'Thank You for your response!');
+  ReactDOM.render(thanYou, surveyInvite);
+}
+
 
 
 
 
 window.onload = ()=>{
   console.log('ready');
+  let notNewUserCheck = getCookie('youansweredthequestion');
+
+  if (notNewUserCheck === 'already') {
+    questionInTheMiddle(1);
+    displayResultsPanel(1);
+  } else {
+    let beginButton = document.getElementById('beginButton');
 
 
-
-  let beginButton = document.getElementById('beginButton');
-
-
-  beginButton.addEventListener('click', ()=>{
-    beginButton.setAttribute("style", "display: none;");
-    startSurvey(1);
-  });
+    beginButton.addEventListener('click', ()=>{
+      beginButton.setAttribute("style", "display: none;");
+      startSurvey(1);
+    });
+  }
 
 };
