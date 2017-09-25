@@ -92,7 +92,7 @@ header {
 
 #survey {
   position: relative;
-  height: 55%;
+  height: 50em;
   overflow: scroll;
   margin-left: 5%;
   z-index: 0;
@@ -169,6 +169,7 @@ footer h2 {
   background: linear-gradient(135deg, #ff00ff, #ffffff);
   height: 25px;
   margin-bottom: 2em;
+  width: 1px;
 }
 
 #answers button {

@@ -6,6 +6,8 @@
 
 const surveyInvite = document.getElementById('surveyInvite');
 const answers = document.getElementById('answers');
+const resultsSummary = document.getElementById('resultsSummary');
+var answered = false;
 
 function nextAnswer(arr, num) {
   return(
@@ -15,19 +17,132 @@ function nextAnswer(arr, num) {
 
 }
 
-function getString(answersArr) {
-  let elements = "React.createElement('form', {className: 'pure-form'}, ";
-  let endElements = "));";
-  let ansObj;
-  let questionName = 'answer' + answersArr[0].question_id;
-  elements += "React.createElement('fieldset', {className: 'pure-group'}, ";
 
-  for (let i = 0; i < answersArr.length; i++) {
-    ansObj = nextAnswer(answersArr, i);
-    elements += "React.createElement('div', {className: 'answerField'}, React.createElement('input', {type: 'radio', name: " + questionName + "}, React.createElement('p', null, " + ansObj.answer_text + "))), ";
+
+function setListener (btn, element, responses) {
+  element.element.addEventListener('click', ()=>{
+    answered = true;
+    btn.setAttribute("style", "visibility: visible;");
+    element.value = 'on';
+    for (let i = 0; i < responses.length; i++) {
+      if (responses[i] !== element) {
+        responses[i].value = 'off';
+      }
+    }
+
+  });
+}
+
+function resizeBar(divBar, currentSize, targetSize) {
+  if (currentSize === targetSize) {
+    return;
+  } else {
+    divBar.setAttribute("style", "width: " + currentSize + "%;");
   }
-  elements += "React.createElement('button', {className: 'button', type: 'submit'}, 'SUBMIT')";
-  return(elements + endElements);
+  setTimeout(()=>{
+    resizeBar(divBar, currentSize + 1, targetSize);
+  }, 50);
+}
+
+function sidePanelResults(answers, surveyAnswers, selections) {
+  console.log(selections[0].answer_text + ' - ' + answers[0] + ' of ' + surveyAnswers.length + ' responses');
+  const SurveySays = React.createClass({
+    getInitialState: function () {
+      return (null);
+    },
+    render: function () {
+      return React.createElement('div', {},
+        React.createElement('h4', {}, selections[0].answer_text + ' - ' + answers[0] + ' of ' + surveyAnswers.length + ' responses'),
+        React.createElement('div', { className: 'answerblock', id: ('surveyNo' + selections[0].id)}, ''),
+        React.createElement('h4', {}, selections[1].answer_text + ' - ' + answers[1] + ' of ' + surveyAnswers.length + ' responses'),
+        React.createElement('div', { className: 'answerblock', id: ('surveyNo' + selections[1].id)}, ''),
+        React.createElement('h4', {}, selections[2].answer_text + ' - ' + answers[2] + ' of ' + surveyAnswers.length + ' responses'),
+        React.createElement('div', { className: 'answerblock', id: ('surveyNo' + selections[2].id)}, ''),
+        React.createElement('h4', {}, selections[3].answer_text + ' - ' + answers[3] + ' of ' + surveyAnswers.length + ' responses'),
+        React.createElement('div', { className: 'answerblock', id: ('surveyNo' + selections[3].id)}, ''),
+        React.createElement('h4', {}, selections[4].answer_text + ' - ' + answers[4] + ' of ' + surveyAnswers.length + ' responses'),
+        React.createElement('div', { className: 'answerblock', id: ('surveyNo' + selections[4].id)}, '')
+      );
+
+    }
+  });
+  ReactDOM.render(
+    React.createElement(SurveySays),
+    resultsSummary
+  );
+  let element;
+  let sizer = 0;
+  for (let k = 0; k <selections.length; k++) {
+    element = document.getElementById('surveyNo' + selections[k].id);
+    sizer = Math.floor(100 * (answers[k] / surveyAnswers.length));
+    if (sizer > 0) {
+      resizeBar(element, 1, sizer);
+    }
+  }
+}
+
+function displayResultsPanel(qq) {
+  axios.get('/customer_answers')
+  .then(completeAnswersData=>{
+    let completeAnswers = completeAnswersData.data;
+    let questionAnswers = completeAnswers.filter((ans)=>{
+      return(ans.question_id === qq);
+    });
+    axios.get('/survey_answers')
+    .then(completeSurveySelectionsData=>{
+      let completeSurveySelections = completeSurveySelectionsData.data;
+      let questionSelections = completeSurveySelections.filter((sel)=>{
+        return(sel.question_id === qq);
+      });
+      let answers = [];
+      for (let i = 0; i < questionSelections.length; i++) {
+        answers[i] = 0;
+      }
+      for (let j = 0; j < questionAnswers.length; j++) {
+        answers[questionAnswers[j].answer_id - 1] += 1;
+      }
+      sidePanelResults(answers, questionAnswers, questionSelections);
+    });
+  });
+}
+
+function surveyResultsTime(responses, qq) {
+  let subObj = {
+    question_id: qq.id
+  };
+  for (let i = 0; i < responses.length; i++) {
+    if (responses[i].value === 'on') {
+      subObj.answer_id = responses[i].id;
+    }
+  }
+  axios.get('/customer_answers')
+  .then(allAnswersData=>{
+    let allAnswers = allAnswersData.data;
+    subObj.user = allAnswers.length + 1;
+    axios.post(`/customer_answers`, subObj)
+    .then(postedData=>{
+      let posted = postedData.data;
+      console.log(posted);
+      displayResultsPanel(qq);
+    });
+  });
+
+
+}
+
+
+
+function handleSubmission(button, responses, qq) {
+
+  for (let i = 0; i < responses.length; i++) {
+    setListener(button, responses[i], responses);
+  }
+
+  button.addEventListener('click', ()=>{
+    console.log('we clicked');
+    button.setAttribute("style", "visibility: hidden;");
+    surveyResultsTime(responses, qq);
+  });
 }
 
 function displayAnswers(qq) {
@@ -44,16 +159,39 @@ function displayAnswers(qq) {
       render: function() {
         return(
           React.createElement('form', {className: 'pure-form'},
-            React.createElement('div', {className: 'answerField'},
-               React.createElement('input', {type: 'radio' },
-                 React.createElement('p', {}, questionAnswers[0].answer_text)
-               )
+            React.createElement('fieldset', {className: 'pure-group'},
+              React.createElement('div', {className: 'answerField'},
+                React.createElement('input', {type: 'radio', id: ('answer' + questionAnswers[0].id), name: 'surveyAnswer' }),
+                  React.createElement('p', {}, questionAnswers[0].answer_text),
+                React.createElement('input', {type: 'radio', id: ('answer' + questionAnswers[1].id), name: 'surveyAnswer' }),
+                  React.createElement('p', {}, questionAnswers[1].answer_text),
+                React.createElement('input', {type: 'radio', id: ('answer' + questionAnswers[2].id), name: 'surveyAnswer' }),
+                  React.createElement('p', {}, questionAnswers[2].answer_text),
+                React.createElement('input', {type: 'radio', id: ('answer' + questionAnswers[3].id), name: 'surveyAnswer' }),
+                  React.createElement('p', {}, questionAnswers[3].answer_text),
+                React.createElement('input', {type: 'radio', id: ('answer' + questionAnswers[4].id), name: 'surveyAnswer' }),
+                  React.createElement('p', {}, questionAnswers[4].answer_text)
+                //)
+
+              ),
+              React.createElement('button', {className: 'button', id: 'answerSubmit', type: 'button'}, 'SUBMIT')
             )
           )
         );
       }
     });
     ReactDOM.render(React.createElement(App), answers);
+    let submitButton = document.getElementById('answerSubmit');
+    let responseArray = [];
+    for (let i = 0; i <questionAnswers.length; i++) {
+      responseArray[i] = {};
+      responseArray[i].element = document.getElementById('answer' + questionAnswers[i].id);
+      responseArray[i].id = questionAnswers[i].id;
+      responseArray[i].text = questionAnswers[i].answer_text;
+      responseArray[i].value = 'off';
+    }
+    submitButton.setAttribute("style", "visibility: hidden;");
+    handleSubmission(submitButton, responseArray, qq);
   });
 }
 
@@ -88,26 +226,5 @@ window.onload = ()=>{
     beginButton.setAttribute("style", "display: none;");
     startSurvey(1);
   });
-  // const element = React.createElement(
-  //   'h2',
-  //   {id: 'surveyTime'},
-  //
-  //   'Please take our short survey:'
-  // );
-  // const startButton = React.createElement(
-  //   'button',
-  //   {className: 'button'},
-  //   'BEGIN'
-  // );
-  //ReactDOM.render(element, surveyInvite);
-  //ReactDOM.render(startButton, document.getElementById('surveyTime'));
-};
 
-// window.onload = ()=>{
-//   const buttonEl = React.createElement(
-//     'button',
-//     {className: 'button'},
-//     'BEGIN'
-//   );
-//   ReactDOM.render(buttonEl, document.getElementById('startDiv'));
-// };
+};
