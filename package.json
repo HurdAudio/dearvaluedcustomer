@@ -2,9 +2,11 @@
   "name": "dearvaluedcustomer",
   "version": "1.0.0",
   "description": "test app",
-  "main": "app/server.js",
+  "main": "./app/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "knex": "knex",
+    "heroku-postbuild": "knex migrate:latest",
+    "start": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -22,5 +24,8 @@
     "express": "^4.15.4",
     "knex": "^0.13.0",
     "pg": "^7.3.0"
+  },
+  "engines": {
+    "node": "7.0.0"
   }
 }
